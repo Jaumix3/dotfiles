@@ -1,0 +1,3 @@
+singleton Appearance Appearance.qml
+singleton ConfigOptions ConfigOptions.qml
+singleton Directories Directories.qml

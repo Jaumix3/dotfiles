@@ -1,0 +1,5 @@
+Overview Overview.qml
+OverviewWidget OverviewWidget.qml
+OverviewWindow OverviewWindow.qml
+SearchItem SearchItem.qml
+SearchWidget SearchWidget.qml

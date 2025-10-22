@@ -1,0 +1,5 @@
+singleton AppSearch AppSearch.qml
+singleton ConfigLoader ConfigLoader.qml
+singleton HyprlandData HyprlandData.qml
+singleton HyprlandKeybinds HyprlandKeybinds.qml
+singleton MaterialThemeLoader MaterialThemeLoader.qml

@@ -77,7 +77,7 @@ Singleton {
     font: QtObject {
         property QtObject family: QtObject {
             property string uiFont: "Open Sans"
-            property string iconFont: "FiraConde Nerd Font"
+            property string iconFont: "FiraCode Nerd Font"
             property string codeFont: "JetBrains Mono NF"
         }
         property QtObject pixelSize: QtObject {

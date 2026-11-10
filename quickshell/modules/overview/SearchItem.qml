@@ -1,6 +1,7 @@
 // pragma NativeMethodBehavior: AcceptThisObject
 import "root:/"
 import "root:/modules/common"
+import "root:/services/"
 import "root:/modules/common/widgets"
 import "root:/modules/common/functions/color_utils.js" as ColorUtils
 import "root:/modules/common/functions/string_utils.js" as StringUtils
@@ -93,8 +94,9 @@ RippleButton {
 
     PointingHandInteraction {}
     onClicked: {
-        root.itemExecute()
-        Hyprland.dispatch("global quickshell:overviewClose")
+        // Call through the entry so C++ methods (DesktopEntry.execute) keep their `this`
+        root.entry?.execute()
+        HyprDispatch.global("quickshell:overviewClose")
     }
     Keys.onPressed: (event) => {
         if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {

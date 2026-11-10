@@ -47,33 +47,6 @@ Item {
     property int draggingFromWorkspace: -1
     property int draggingTargetWorkspace: -1
 
-    // Debug logging function
-    function debugMultiMonitorInfo() {
-        console.log("=== Multi-Monitor Debug Info ===")
-        console.log("Current monitor ID:", root.monitor.id)
-        console.log("Current monitor name:", root.monitor.name)
-        console.log("Current monitor scale:", root.monitor.scale)
-        console.log("Current monitor position:", root.monitor.x, root.monitor.y)
-        console.log("Total monitors:", HyprlandData.monitors.length)
-        
-        HyprlandData.monitors.forEach((mon, idx) => {
-            console.log(`Monitor ${idx}: ID=${mon.id}, Name=${mon.name}, Scale=${mon.scale}, Pos=(${mon.x},${mon.y}), Size=${mon.width}x${mon.height}, Reserved=[${mon.reserved.join(",")}]`)
-        })
-        
-        console.log("Total windows:", windowAddresses.length)
-        windowAddresses.forEach((address, idx) => {
-            const win = windowByAddress[address]
-            if (win) {
-                console.log(`Window ${idx}: ${win.class} on monitor ${win.monitor}, workspace ${win.workspace?.id}, pos=(${win.at[0]},${win.at[1]})`)
-            }
-        })
-        console.log("=== End Debug Info ===")
-    }
-
-    Component.onCompleted: {
-        debugMultiMonitorInfo()
-    }
-
     implicitWidth: overviewBackground.implicitWidth + Appearance.sizes.elevationMargin * 2
     implicitHeight: overviewBackground.implicitHeight + Appearance.sizes.elevationMargin * 2
 
@@ -226,7 +199,7 @@ Item {
                                 onClicked: {
                                     if (root.draggingTargetWorkspace === -1) {
                                         GlobalStates.overviewOpen = false
-                                        Hyprland.dispatch(`workspace ${workspaceValue}`)
+                                        HyprDispatch.workspace(workspaceValue)
                                     }
                                 }
                             }
@@ -321,7 +294,7 @@ Item {
                             window.Drag.active = false
                             root.draggingFromWorkspace = -1
                             if (targetWorkspace !== -1 && targetWorkspace !== windowData?.workspace.id) {
-                                Hyprland.dispatch(`movetoworkspacesilent ${targetWorkspace}, address:${window.windowData?.address}`)
+                                HyprDispatch.moveToWorkspaceSilent(targetWorkspace, window.windowData?.address)
                                 updateWindowPosition.restart()
                             }
                             else {
@@ -334,10 +307,10 @@ Item {
 
                             if (event.button === Qt.LeftButton) {
                                 GlobalStates.overviewOpen = false
-                                Hyprland.dispatch(`focuswindow address:${windowData.address}`)
+                                HyprDispatch.focusWindow(windowData.address)
                                 event.accepted = true
                             } else if (event.button === Qt.MiddleButton) {
-                                Hyprland.dispatch(`closewindow address:${windowData.address}`)
+                                HyprDispatch.closeWindow(windowData.address)
                                 event.accepted = true
                             }
                         }

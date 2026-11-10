@@ -28,9 +28,16 @@ Singleton {
         property int arbitraryRaceConditionDelay: 20 // milliseconds
     }
 
+    property QtObject apps: QtObject {
+        property string terminal: "kitty" // Used to run commands from the search
+    }
+
     property QtObject search: QtObject {
     property bool searchEnabled: false
     property int nonAppResultDelay: 30 // This prevents lagging when typing
+    property string engineBaseUrl: "https://www.google.com/search?q="
+    property list<string> excludedSites: []
+    property bool sloppy: false // Levenshtein app search instead of fuzzy
     property QtObject prefix: QtObject {
             property string action: "/"
             property string clipboard: ";"

@@ -58,11 +58,11 @@ Singleton {
             if (root.firstLoad) {
                 root.firstLoad = false;
             } else {
-                Hyprland.dispatch(`exec notify-send "${qsTr("Shell configuration reloaded")}" "${root.filePath}"`)
+                HyprDispatch.exec(`notify-send "${qsTr("Shell configuration reloaded")}" "${root.filePath}"`)
             }
         } catch (e) {
             console.error("[ConfigLoader] Error reading file:", e);
-            Hyprland.dispatch(`exec notify-send "${qsTr("Shell configuration failed to load")}" "${root.filePath}"`)
+            HyprDispatch.exec(`notify-send "${qsTr("Shell configuration failed to load")}" "${root.filePath}"`)
             return;
         }
     }
@@ -107,7 +107,7 @@ Singleton {
 
     function saveConfig() {
         const plainConfig = ObjectUtils.toPlainObject(ConfigOptions);
-        Hyprland.dispatch(`exec echo '${StringUtils.shellSingleQuoteEscape(JSON.stringify(plainConfig, null, 2))}' > '${root.filePath}'`)
+        HyprDispatch.exec(`echo '${StringUtils.shellSingleQuoteEscape(JSON.stringify(plainConfig, null, 2))}' > '${root.filePath}'`)
     }
 
     Timer {
@@ -137,9 +137,9 @@ Singleton {
             if(error == FileViewError.FileNotFound) {
                 console.log("[ConfigLoader] File not found, creating new file.")
                 root.saveConfig()
-                Hyprland.dispatch(`exec notify-send "${qsTr("Shell configuration created")}" "${root.filePath}"`)
+                HyprDispatch.exec(`notify-send "${qsTr("Shell configuration created")}" "${root.filePath}"`)
             } else {
-                Hyprland.dispatch(`exec notify-send "${qsTr("Shell configuration failed to load")}" "${root.filePath}"`)
+                HyprDispatch.exec(`notify-send "${qsTr("Shell configuration failed to load")}" "${root.filePath}"`)
             }
         }
     }

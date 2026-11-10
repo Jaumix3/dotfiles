@@ -25,6 +25,10 @@ Item { // Wrapper
 
     property string mathResult: ""
 
+    // Load the clipboard history when switching to clipboard search
+    readonly property bool clipboardMode: searchingText.startsWith(ConfigOptions.search.prefix.clipboard)
+    onClipboardModeChanged: if (clipboardMode) Cliphist.refresh()
+
     function disableExpandAnimation() {
         searchWidthBehavior.enabled = false;
     }
@@ -40,37 +44,25 @@ Item { // Wrapper
         root.searchingText = text;
     }
 
+    // DarkLight.sh toggles the theme; only run it when the mode has to change.
+    readonly property string themeModeFile: "$HOME/.cache/.theme_mode"
     property var searchActions: [
         {
             action: "img", 
             execute: () => {
-                executor.executeCommand(Directories.wallpaperSwitchScriptPath)
+                HyprDispatch.exec(Directories.wallpaperSelectScriptPath)
             }
         },
         {
             action: "dark",
             execute: () => {
-                executor.executeCommand(`${Directories.wallpaperSwitchScriptPath} --mode dark --noswitch`)
+                HyprDispatch.exec(`[ "$(cat ${root.themeModeFile} 2>/dev/null)" = "Dark" ] || '${Directories.darkLightScriptPath}'`)
             }
         },
         {
             action: "light",
             execute: () => {
-                executor.executeCommand(`${Directories.wallpaperSwitchScriptPath} --mode light --noswitch`)
-            }
-        },
-        {
-            action: "accentcolor",
-            execute: (args) => {
-                executor.executeCommand(
-                    `${Directories.wallpaperSwitchScriptPath} --noswitch --color ${args != '' ? ("'"+args+"'") : ""}`
-                )
-            }
-        },
-        {
-            action: "todo",
-            execute: (args) => {
-                Todo.addTask(args)
+                HyprDispatch.exec(`[ "$(cat ${root.themeModeFile} 2>/dev/null)" = "Light" ] || '${Directories.darkLightScriptPath}'`)
             }
         },
     ]
@@ -108,7 +100,7 @@ Item { // Wrapper
         property list<string> baseCommand: ["bash", "-c"]
         function executeCommand(command) {
             executor.command = baseCommand.concat(
-                `${command} || ${ConfigOptions.apps.terminal} fish -C 'echo "${qsTr("Searching for package with that command")}..." && pacman -F ${command}'`
+                `${command} || ${ConfigOptions.apps.terminal} bash -c 'echo "${qsTr("Searching for package with that command")}..." && pacman -F ${command}; exec bash'`
             )
             executor.startDetached()
         }
@@ -304,7 +296,7 @@ Item { // Wrapper
                                     clickActionName: "",
                                     type: `#${entry.match(/^\s*(\S+)/)?.[1] || ""}`,
                                     execute: () => {
-                                        Hyprland.dispatch(`exec echo '${StringUtils.shellSingleQuoteEscape(entry)}' | cliphist decode | wl-copy`);
+                                        HyprDispatch.exec(`echo '${StringUtils.shellSingleQuoteEscape(entry)}' | cliphist decode | wl-copy`);
                                     }
                                 };
                             }).filter(Boolean);
@@ -319,7 +311,7 @@ Item { // Wrapper
                                     clickActionName: "",
                                     type: "Emoji",
                                     execute: () => {
-                                        Hyprland.dispatch(`exec wl-copy '${StringUtils.shellSingleQuoteEscape(entry.match(/^\s*(\S+)/)?.[1])}'`);
+                                        HyprDispatch.exec(`wl-copy '${StringUtils.shellSingleQuoteEscape(entry.match(/^\s*(\S+)/)?.[1])}'`);
                                     }
                                 };
                             }).filter(Boolean);
@@ -332,20 +324,20 @@ Item { // Wrapper
                             name: root.mathResult,
                             clickActionName: qsTr("Copy"),
                             type: qsTr("Math result"),
-                            fontType: "monospace",
+                            fontType: "codeFont",
                             materialSymbol: 'calculate',
                             execute: () => {
-                                Hyprland.dispatch(`exec wl-copy '${StringUtils.shellSingleQuoteEscape(root.mathResult)}'`)
+                                HyprDispatch.exec(`wl-copy '${StringUtils.shellSingleQuoteEscape(root.mathResult)}'`)
                             }
                         }
                         const commandResultObject = {
                             name: searchingText.replace("file://", ""),
                             clickActionName: qsTr("Run"),
                             type: qsTr("Run command"),
-                            fontType: "monospace",
+                            fontType: "codeFont",
                             materialSymbol: 'terminal',
                             execute: () => {
-                                executor.executeCommand(searchingText.startsWith('sudo') ? `${ConfigOptions.apps.terminal} fish -C '${root.searchingText.replace("file://", "")}'` : root.searchingText.replace("file://", ""));
+                                executor.executeCommand(searchingText.startsWith('sudo') ? `${ConfigOptions.apps.terminal} bash -c '${root.searchingText.replace("file://", "")}; exec bash'` : root.searchingText.replace("file://", ""));
                             }
                         }
                         const launcherActionObjects = root.searchActions

@@ -3,3 +3,6 @@ singleton ConfigLoader ConfigLoader.qml
 singleton HyprlandData HyprlandData.qml
 singleton HyprlandKeybinds HyprlandKeybinds.qml
 singleton MaterialThemeLoader MaterialThemeLoader.qml
+singleton Cliphist Cliphist.qml
+singleton Emojis Emojis.qml
+singleton HyprDispatch HyprDispatch.qml

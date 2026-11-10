@@ -39,7 +39,7 @@
   "font": {
     "family": {
       "uiFont": "Open Sans",
-      "iconFont": "FiraConde Nerd Font",
+      "iconFont": "FiraCode Nerd Font",
       "codeFont": "JetBrains Mono NF"
     },
     "pixelSize": {

@@ -17,4 +17,8 @@ Singleton {
     property string shellConfig: FileUtils.trimFileProtocol(`${Directories.config}/quickshell`)
     property string shellConfigPath: `${Directories.shellConfig}/config.json`
     property string generatedMaterialThemePath: `${Directories.shellConfig}/qml_color.json`
+    // Hyprland rice (KooL's dots) scripts used by the search actions
+    property string hyprConfig: FileUtils.trimFileProtocol(`${Directories.config}/hypr`)
+    property string wallpaperSelectScriptPath: `${Directories.hyprConfig}/UserScripts/WallpaperSelect.sh`
+    property string darkLightScriptPath: `${Directories.hyprConfig}/scripts/DarkLight.sh`
 }

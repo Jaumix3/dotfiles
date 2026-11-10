@@ -31,11 +31,11 @@ Singleton {
 
         function onRawEvent(event) {
             // Filter out redundant old v1 events for the same thing
-            if(event.name in [
+            if ([
                 "activewindow", "focusedmon", "monitoradded", 
                 "createworkspace", "destroyworkspace", "moveworkspace", 
                 "activespecial", "movewindow", "windowtitle"
-            ]) return ;
+            ].includes(event.name)) return ;
             updateWindowList()
         }
     }

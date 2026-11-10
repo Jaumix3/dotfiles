@@ -1,0 +1,3 @@
+-- Workspace rules (Lua twin of workspaces.conf, written by nwg-displays).
+-- Example:
+-- hl.workspace_rule({ workspace = "1", monitor = "HDMI-A-1", default = true })

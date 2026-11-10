@@ -71,7 +71,7 @@ Rectangle {
     }
 
     Component.onDestruction: {
-        Hyprland.dispatch(`exec bash -c "[ -f '${imageDecodeFilePath}' ] && rm -f '${imageDecodeFilePath}'"`)
+        HyprDispatch.exec(`bash -c "[ -f '${imageDecodeFilePath}' ] && rm -f '${imageDecodeFilePath}'"`)
     }
 
     Image {

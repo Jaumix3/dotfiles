@@ -103,6 +103,11 @@ main() {
         *) return ;;  # Do nothing for invalid choices
     esac
 
+    # Hyprland 0.55+ reads the Lua config: open the .lua twin when it exists
+    if [[ "$file" == *.conf && -f "${file%.conf}.lua" && -f "$HOME/.config/hypr/hyprland.lua" ]]; then
+        file="${file%.conf}.lua"
+    fi
+
     # Open the selected file in the terminal with the text editor
     if [ -n "$file" ]; then
         $term -e $edit "$file"
